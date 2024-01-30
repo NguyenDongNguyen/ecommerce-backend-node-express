@@ -86,7 +86,37 @@ const loginUser = (newUser) => {
     });
 };
 
+const updateUser = (id, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            //check xem email đki đã tồn tại hay chưa
+            const checkUser = await User.findOne({
+                _id: id,
+            });
+            if (checkUser === null) {
+                resolve({
+                    status: "OK",
+                    message: "The user is not defined",
+                });
+            }
+
+            const updatedUser = await User.findByIdAndUpdate(id, data, {
+                new: true,
+            });
+            console.log("🚀 updatedUser:", updatedUser);
+            resolve({
+                status: "OK",
+                message: "SUCCESS",
+                data: updatedUser,
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
 module.exports = {
     createUser,
     loginUser,
+    updateUser,
 };
